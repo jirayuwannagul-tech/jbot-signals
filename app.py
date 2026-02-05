@@ -10,7 +10,7 @@ app = Flask(__name__)
 # ============================================
 # LAYER 1: CONFIGURATION
 # ============================================
-LINE_CHANNEL_ACCESS_TOKEN = 'vogysToPeoVbYteQDckcUyYFVVRKB4lq1uXaqTT7vL2mHplXUghEB+GGUCwSN/5Z62Dw4F1/+0iOuz4FlZjlo0+npM9gaeLy1m0ujcMDqylpummN0Ib+EesqIzdvhT0jYVLOwCKh+FURhzDP/JLsAdB04t89/1O/w1cDnyilFU='
+LINE_CHANNEL_ACCESS_TOKEN = 'PWgMZOGpbkRwRvPSTKQI4MnNsD8NEY5HYwCJT/Ge5KegcYNIdhJbZlQaww6GEYAYZ62Dw4F1/+0iOuz4FlZjlo0+npM9gaeLy1m0ujcMDqzZwy4NqgfYdrSV9/Hgv1lKk/OKmiq2kpG8hy3tTKVbjAdB04t89/1O/w1cDnyilFU='
 LINE_CHANNEL_SECRET = 'b113f6e5414f3bcc23acbea86c4cee71'
 ADMIN_LINE_ID = 'U8e5ae7c7887eca3cdf7831bf1ede1d3f'
 
