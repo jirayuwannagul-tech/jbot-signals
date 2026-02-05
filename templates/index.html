@@ -229,54 +229,26 @@
     <!-- ============================================ -->
     <!-- LAYER 6: MODAL - ฟอร์มสมัครสมาชิก -->
     <!-- ============================================ -->
+    
     <div id="registrationModal" class="modal">
-        <!-- Modal Container - ซ่อนไว้ (JavaScript จะแสดง) -->
-        
-        <div class="modal-content" style="max-width: 550px; padding: 50px;">
-            <!-- Modal Box - กว้างสุด 550px, padding 50px -->
-            
-            <!-- Close Button -->
+        <div class="modal-content" style="max-width: 450px; padding: 40px; text-align: center;">
             <span style="cursor:pointer; float:right; font-size: 28px; color: #94a3b8;" onclick="closeModal()">&times;</span>
-            <!-- ปุ่มปิด - ลอยขวา, ขนาด 28px, สีเทา, เรียก closeModal() -->
             
-            <!-- Modal Title -->
-            <h2 style="margin-bottom: 30px; color: #1e90ff; font-family: 'Orbitron', sans-serif; font-size: 1.8rem;">Register Member</h2>
-            <!-- หัวข้อ - ห่างล่าง 30px, สีน้ำเงิน, font Orbitron, ขนาด 1.8rem -->
+            <h2 style="margin-bottom: 20px; color: #1e90ff; font-family: 'Orbitron', sans-serif; font-size: 1.8rem;">สมัครสมาชิก VIP</h2>
             
-            <!-- Form -->
-            <form onsubmit="handleSubmit(event)">
-                <!-- Form - เรียก handleSubmit() เมื่อส่งฟอร์ม -->
+            <div style="background: rgba(30, 144, 255, 0.08); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px dashed rgba(30, 144, 255, 0.4);">
+                <p style="color: #fbbf24; margin-bottom: 10px; font-size: 1.1rem; font-weight: 600;">💰 ขั้นตอนการสมัคร</p>
+                <p style="font-size: 1rem; color: #ffffff;">1. โอนเงิน <strong>490 บาท</strong></p>
+                <div style="font-size: 1.4rem; font-weight: 800; color: #38bdf8; margin: 10px 0;">024-3-44305-9</div>
+                <div style="font-size: 0.95rem; color: #94a3b8;">กสิกรไทย: นายจิรายุ วรรณกุล</div>
+            </div>
 
-                <div style="background: rgba(30, 144, 255, 0.08); padding: 25px; border-radius: 15px; margin-bottom: 25px; border: 1px dashed rgba(30, 144, 255, 0.4); text-align: center;">
-                    <p style="color: #fbbf24; margin-bottom: 10px; font-size: 1.1rem; font-weight: 600;">💰 ชำระค่าสมาชิก 490 บาท (ต่อเดือน)</p>
-                    <div style="font-size: 1.1rem; color: #ffffff; margin-bottom: 5px;">ธนาคารกสิกรไทย (K-Bank)</div>
-                    <div style="font-size: 1.6rem; font-weight: 800; color: #38bdf8; letter-spacing: 1.5px; margin: 5px 0;">024-3-44305-9</div>
-                    <div style="font-size: 0.95rem; color: #94a3b8;">ชื่อบัญชี: นายจิรายุ วรรณกุล</div>
-                    <p style="font-size: 0.8rem; color: #64748b; margin-top: 15px;">* โอนแล้วกรอกข้อมูลด้านล่าง ทีมงานจะตรวจสอบทันที</p>
-                </div>
-                
-                <!-- Input: Name -->
-                <div style="margin-bottom: 20px;">
-                    <!-- Input Container - ห่างล่าง 20px -->
-                    <input type="text" id="name" placeholder="ชื่อ-นามสกุล" required style="width: 100%; padding: 18px; border-radius: 12px; border: 1px solid #2a5298; background: #0a1628; color: white; font-size: 1.1rem;">
-                    <!-- Input - กว้าง 100%, padding 18px, มุมโค้ง 12px, กรอบน้ำเงิน, พื้นเข้ม, ข้อความขาว, ขนาด 1.1rem -->
-                </div>
-                
-                <!-- Input: Email -->
-                <div style="margin-bottom: 20px;">
-                    <input type="email" id="email" placeholder="อีเมล" required style="width: 100%; padding: 18px; border-radius: 12px; border: 1px solid #2a5298; background: #0a1628; color: white; font-size: 1.1rem;">
-                </div>
-                
-                <!-- Input: LINE ID -->
-                <div style="margin-bottom: 25px;">
-                    <!-- ห่างล่าง 25px (มากกว่าอื่น เพราะเป็นช่องสุดท้าย) -->
-                    <input type="text" id="lineId" placeholder="LINE ID" required style="width: 100%; padding: 18px; border-radius: 12px; border: 1px solid #2a5298; background: #0a1628; color: white; font-size: 1.1rem;">
-                </div>
-                
-                <!-- Submit Button -->
-                <button type="submit" class="cta-button" style="width:100%; font-size: 1.3rem;">ส่งข้อมูลสมัครสมาชิก</button>
-                <!-- ปุ่มส่ง - กว้าง 100%, ขนาด 1.3rem -->
-            </form>
+            <p style="color: #ffffff; margin-bottom: 15px;">2. สแกน QR Code เพื่อส่งสลิป</p>
+            
+            <img src="{{ url_for('static', filename='line-qr.png') }}" style="width: 250px; border-radius: 10px; border: 3px solid #00b900;">
+
+            <p style="font-size: 0.9rem; color: #94a3b8; margin-top: 15px;">หรือคลิกปุ่มด้านล่างเพื่อแอดไลน์</p>
+            <a href="ใส่ลิงก์ไลน์ของพี่ตรงนี้" target="_blank" class="cta-button" style="display: block; text-decoration: none; background: #00b900; margin-top: 10px; font-size: 1.1rem;">เพิ่มเพื่อนผ่าน LINE</a>
         </div>
     </div>
 
