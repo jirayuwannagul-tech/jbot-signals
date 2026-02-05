@@ -15,7 +15,7 @@ LINE_CHANNEL_SECRET = 'b113f6e5414f3bcc23acbea86c4cee71'
 
 # 2. Admin ID (ก๊อป User ID ของพี่จากหน้า Dashboard มาใส่ที่นี่)
 # เพื่อให้บอทส่งข้อความแจ้งเตือนหาพี่ได้โดยตรง
-ADMIN_LINE_ID = 'ใส่_USER_ID_ของพี่ที่นี่' 
+ADMIN_LINE_ID = 'U8e5ae7c7887eca3cdf7831bf1ede1d3f' 
 
 # 3. Database Config
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///jbot_members.db'
