@@ -6,9 +6,9 @@ import requests
 
 app = Flask(__name__)
 
-# --- 1. ตั้งค่ากุญแจ LINE (พี่ใส่รหัสของพี่ตรงนี้) ---
-LINE_CHANNEL_ACCESS_TOKEN = 'ใส่ Access Token ของพี่'
-LINE_CHANNEL_SECRET = 'ใส่ Channel Secret ของพี่'
+# --- 1. ตั้งค่ากุญแจ LINE (ใส่รหัสที่พี่ให้มาเรียบร้อยครับ) ---
+LINE_CHANNEL_ACCESS_TOKEN = 'b113f6e5414f3bcc23acbea86c4cee71'
+LINE_CHANNEL_SECRET = 'vogysToPeoVbYteQDckcUyYFVVRKB4lq1uXaqTT7vL2mHplXUghEB+GGUCwSN/5Z62Dw4F1/+0iOuz4FlZjlo0+npM9gaeLy1m0ujcMDqylpummN0Ib+EesqIzdvhT0jYVLOwCKh+FURhzDP/JLsAdB04t89/1O/w1cDnyilFU='
 
 # --- 2. ตั้งค่าระบบฐานข้อมูล ---
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///jbot_members.db'
@@ -24,7 +24,6 @@ class Member(db.Model):
 with app.app_context():
     db.create_all()
 
-# ฟังก์ชันส่งข้อความหาลูกค้า
 def send_line_message(user_id, text):
     url = 'https://api.line.me/v2/bot/message/push'
     headers = {
@@ -34,33 +33,32 @@ def send_line_message(user_id, text):
     payload = {'to': user_id, 'messages': [{'type': 'text', 'text': text}]}
     requests.post(url, headers=headers, json=payload)
 
-# --- 3. ระบบบอทรับข้อมูล (Webhook) ---
+# --- 3. ทางเข้าหน้าแรก (Home Page) ---
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+# --- 4. ระบบบอทรับข้อมูล (Webhook) ---
 @app.route("/callback/admin", methods=['POST'])
 def callback():
     body = request.get_json()
     if not body or 'events' not in body: return 'OK'
-    
     for event in body['events']:
         user_id = event['source']['userId']
-        
-        # กรณีที่ 1: ลูกค้าส่ง "รูปภาพ" (สลิป)
+        # ถ้าส่ง "รูปภาพ" มา (สลิป)
         if event['type'] == 'message' and event['message']['type'] == 'image':
             existing = Member.query.filter_by(line_id=user_id).first()
             if not existing:
-                # สร้างชื่อรออนุมัติทันทีในฐานข้อมูล
                 new_member = Member(line_id=user_id, expiry_date=datetime.now(), is_active=False)
                 db.session.add(new_member)
                 db.session.commit()
-            
             send_line_message(user_id, "ได้รับรูปสลิปแล้วครับ! แอดมินจะรีบตรวจสอบและอนุมัติให้ภายใน 15 นาทีครับ")
-
-        # กรณีที่ 2: ลูกค้าพิมพ์ "ข้อความ"
+        # ถ้าพิมพ์ "ตัวหนังสือ"
         elif event['type'] == 'message' and event['message']['type'] == 'text':
             send_line_message(user_id, "สวัสดีครับ!\nโอนเงิน 490 บาทมาที่\nกสิกร: 024-3-44305-9 (จิรายุ)\nแล้วส่งรูปสลิปมาที่นี่ได้เลยครับ")
-            
     return 'OK'
 
-# --- 4. หน้าเว็บจัดการสมาชิก ---
+# --- 5. หน้าเว็บจัดการสมาชิก (Admin Dashboard) ---
 @app.route('/admin/dashboard')
 def admin_dashboard():
     members = Member.query.all()
