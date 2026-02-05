@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ระบบจัดการสมาชิก J-Bot</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>รายชื่อสมาชิก J-Bot Signals</h2>
+            <a href="/" class="btn btn-secondary btn-sm">กลับหน้าหลัก</a>
+        </div>
+        
+        <table class="table table-bordered bg-white shadow-sm mt-3">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>LINE ID</th>
+                    <th>สถานะ</th>
+                    <th>วันหมดอายุ</th>
+                    <th>จัดการ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                <tr class="text-center align-middle">
+                    <td>{{ member.line_id }}</td>
+                    <td>
+                        {% if member.is_active %}
+                            <span class="badge bg-success">เปิดสัญญาณ</span>
+                        {% else %}
+                            <span class="badge bg-danger">ปิดสัญญาณ</span>
+                        {% if member.expiry_date < now %} (หมดอายุ) {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>{{ member.expiry_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        <a href="{{ url_for('approve_member', member_id=member.id) }}" 
+                           class="btn btn-success btn-sm">อนุมัติ 30 วัน</a>
+                        
+                        <a href="{{ url_for('block_member', member_id=member.id) }}" 
+                           class="btn btn-outline-danger btn-sm">ปิดวาล์ว</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">ยังไม่มีรายชื่อสมาชิกในระบบ</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
