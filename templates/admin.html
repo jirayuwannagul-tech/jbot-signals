@@ -7,48 +7,51 @@
 </head>
 <body class="bg-light">
     <div class="container mt-5">
-        <div class="d-flex justify-content-between align-items-center">
-            <h2>รายชื่อสมาชิก J-Bot Signals</h2>
-            <a href="/" class="btn btn-secondary btn-sm">กลับหน้าหลัก</a>
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white text-center p-3">
+                <h4>ทั้งหมด: {{ members|length }}</h4>
+            </div>
         </div>
-        
-        <table class="table table-bordered bg-white shadow-sm mt-3">
-            <thead class="table-dark text-center">
-                <tr>
-                    <th>LINE ID</th>
-                    <th>สถานะ</th>
-                    <th>วันหมดอายุ</th>
-                    <th>จัดการ</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for member in members %}
-                <tr class="text-center align-middle">
-                    <td>{{ member.line_id }}</td>
-                    <td>
-                        {% if member.is_active %}
-                            <span class="badge bg-success">เปิดสัญญาณ</span>
-                        {% else %}
-                            <span class="badge bg-danger">ปิดสัญญาณ</span>
-                        {% if member.expiry_date < now %} (หมดอายุ) {% endif %}
-                        {% endif %}
-                    </td>
-                    <td>{{ member.expiry_date.strftime('%Y-%m-%d %H:%M') }}</td>
-                    <td>
-                        <a href="{{ url_for('approve_member', member_id=member.id) }}" 
-                           class="btn btn-success btn-sm">อนุมัติ 30 วัน</a>
-                        
-                        <a href="{{ url_for('block_member', member_id=member.id) }}" 
-                           class="btn btn-outline-danger btn-sm">ปิดวาล์ว</a>
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="4" class="text-center text-muted">ยังไม่มีรายชื่อสมาชิกในระบบ</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="col-md-4">
+            <div class="card bg-success text-white text-center p-3">
+                <h4>Active: {{ members|selectattr('is_active', 'equalto', True)|list|length }}</h4>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>จัดการสมาชิก J-Bot</h2>
+        <a href="/" class="btn btn-secondary btn-sm">หน้าหลัก</a>
+    </div>
+    
+    <table class="table table-bordered bg-white shadow-sm mt-3">
+        <thead class="table-dark text-center">
+            <tr>
+                <th>ชื่อ-นามสกุล</th>
+                <th>อีเมล</th>
+                <th>LINE ID</th>
+                <th>สถานะ</th>
+                <th>จัดการ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in members %}
+            <tr class="text-center align-middle">
+                <td>{{ member.name }}</td> <td>{{ member.email }}</td> <td>{{ member.line_id }}</td>
+                <td>
+                    {% if member.is_active %}
+                        <span class="badge bg-success">Active</span>
+                    {% else %}
+                        <span class="badge bg-danger">Expired</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('approve_member', member_id=member.id) }}" class="btn btn-success btn-sm">อนุมัติ</a>
+                    <a href="{{ url_for('block_member', member_id=member.id) }}" class="btn btn-outline-danger btn-sm">ปิดวาล์ว</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
