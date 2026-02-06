@@ -342,7 +342,7 @@ def admin_dashboard():
 @app.route('/admin/approve/<int:member_id>')
 def approve_member(member_id):
     """อนุมัติจากหน้าเว็บ (สำรอง)"""
-    member = Member.query.get(member_id)
+    member = db.session.get(Member, member_id)
     if member:
         member.is_active = True
         member.expiry_date = datetime.now() + timedelta(days=30)
