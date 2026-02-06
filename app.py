@@ -307,14 +307,27 @@ def home():
 def admin_dashboard():
     members = Member.query.order_by(Member.created_at.desc()).all()
     total = len(members)
-    active = sum(1 for m in members if m.is_active)
-    expired = total - active
+    
+    # นับแยกตามสถานะ
+    active = 0
+    pending = 0
+    expired = 0
+    now = datetime.now()
+    
+    for m in members:
+        if m.is_active and m.expiry_date > now:
+            active += 1
+        elif not m.is_active:
+            pending += 1
+        elif m.expiry_date <= now:
+            expired += 1
     
     return render_template('admin.html', 
                          members=members, 
-                         now=datetime.now(),
+                         now=now,
                          total=total,
                          active=active,
+                         pending=pending,
                          expired=expired)
 
 @app.route('/admin/approve/<int:member_id>')

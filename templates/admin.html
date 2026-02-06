@@ -1,101 +1,192 @@
 <!DOCTYPE html>
 <html lang="th">
+<!-- ============================================ -->
+<!-- LAYER 1: HEAD - META & IMPORTS -->
+<!-- ============================================ -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>J-Bot Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- ============================================ -->
+    <!-- LAYER 2: CUSTOM STYLES -->
+    <!-- ============================================ -->
     <style>
-        body { font-family: 'IBM Plex Sans Thai', sans-serif; }
-        .card { border: none; border-radius: 15px; }
-        .table { border-radius: 10px; overflow: hidden; }
+        body { 
+            font-family: 'IBM Plex Sans Thai', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .card { 
+            border: none; 
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .table { 
+            border-radius: 10px; 
+            overflow: hidden; 
+        }
+        .badge-active { background: #10b981; }
+        .badge-pending { background: #f59e0b; }
+        .badge-expired { background: #6b7280; }
     </style>
 </head>
-<body class="bg-light">
 
+<body>
     <div class="container mt-5">
         
+        <!-- ============================================ -->
+        <!-- LAYER 3: STATISTICS CARDS -->
+        <!-- ============================================ -->
         <div class="row mb-4">
-            <div class="col-md-4">
+            <!-- Total Members -->
+            <div class="col-md-3">
                 <div class="card shadow-sm bg-primary text-white text-center p-4">
-                    <p class="mb-1">สมาชิกทั้งหมด</p>
-                    <h2 class="fw-bold">{{ members|length }}</h2>
+                    <p class="mb-1 fw-light">สมาชิกทั้งหมด</p>
+                    <h2 class="fw-bold">{{ total }}</h2>
                 </div>
             </div>
-            <div class="col-md-4">
+            
+            <!-- Active Members -->
+            <div class="col-md-3">
                 <div class="card shadow-sm bg-success text-white text-center p-4">
-                    <p class="mb-1">Active (เปิดสัญญาณ)</p>
-                    <h2 class="fw-bold">{{ members|selectattr('is_active', 'equalto', True)|list|length }}</h2>
+                    <p class="mb-1 fw-light">Active</p>
+                    <h2 class="fw-bold">{{ active }}</h2>
                 </div>
             </div>
-            <div class="col-md-4">
+            
+            <!-- Pending Members -->
+            <div class="col-md-3">
+                <div class="card shadow-sm bg-warning text-dark text-center p-4">
+                    <p class="mb-1 fw-light">รออนุมัติ</p>
+                    <h2 class="fw-bold">{{ pending }}</h2>
+                </div>
+            </div>
+            
+            <!-- Expired Members -->
+            <div class="col-md-3">
                 <div class="card shadow-sm bg-secondary text-white text-center p-4">
-                    <p class="mb-1">รออนุมัติ/หมดอายุ</p>
-                    <h2 class="fw-bold">{{ members|selectattr('is_active', 'equalto', False)|list|length }}</h2>
+                    <p class="mb-1 fw-light">หมดอายุ</p>
+                    <h2 class="fw-bold">{{ expired }}</h2>
                 </div>
             </div>
         </div>
 
+        <!-- ============================================ -->
+        <!-- LAYER 4: PAGE HEADER & ACTIONS -->
+        <!-- ============================================ -->
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="fw-bold">จัดการสมาชิก J-Bot Signals</h2>
+            <h2 class="fw-bold text-white">จัดการสมาชิก J-Bot Signals</h2>
             <div>
-                <a href="/admin/check-expiry" class="btn btn-warning btn-sm me-2">🔄 เช็คหมดอายุ</a>
-                <a href="/" class="btn btn-outline-dark btn-sm">🏠 หน้าหลักเว็บ</a>
+                <a href="/admin/check-expiry" class="btn btn-warning btn-sm me-2">
+                    🔄 เช็คหมดอายุ
+                </a>
+                <a href="/" class="btn btn-light btn-sm">
+                    🏠 หน้าหลักเว็บ
+                </a>
             </div>
         </div>
         
+        <!-- ============================================ -->
+        <!-- LAYER 5: MEMBERS TABLE -->
+        <!-- ============================================ -->
         <div class="table-responsive shadow-sm">
             <table class="table table-hover bg-white mb-0">
+                
+                <!-- TABLE HEADER -->
                 <thead class="table-dark">
                     <tr class="text-center">
                         <th>ID</th>
+                        <th>ชื่อ</th>
                         <th>LINE ID</th>
                         <th>วันหมดอายุ</th>
                         <th>สถานะ</th>
                         <th>การจัดการ</th>
                     </tr>
                 </thead>
+                
+                <!-- TABLE BODY -->
                 <tbody>
-                    {% for member in members %}
-                    <tr class="text-center align-middle">
-                        <td>{{ member.id }}</td>
-                        <td class="text-start"><code>{{ member.line_id }}</code></td>
-                        <td>
-                            {% if member.is_active %}
-                                {{ member.expiry_date.strftime('%d/%m/%Y') }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if member.is_active %}
-                                <span class="badge bg-success">Active</span>
-                            {% else %}
-                                <span class="badge bg-warning text-dark">Pending / Expired</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="{{ url_for('approve_member', member_id=member.id) }}" 
-                               class="btn btn-success btn-sm {% if member.is_active %}disabled{% endif %}">
-                                ✅ อนุมัติ 30 วัน
-                            </a>
+                    {% if members %}
+                        {% for member in members %}
+                        <tr class="text-center align-middle">
                             
-                            <a href="#" class="btn btn-outline-danger btn-sm" onclick="return confirm('ยืนยันการปิดวาล์ว?')">
-                                🚫 ปิดวาล์ว
-                            </a>
-                        </td>
-                    </tr>
+                            <!-- ID -->
+                            <td>{{ member.id }}</td>
+                            
+                            <!-- Display Name -->
+                            <td class="text-start fw-bold">
+                                {{ member.display_name or 'ไม่ระบุชื่อ' }}
+                            </td>
+                            
+                            <!-- LINE ID -->
+                            <td class="text-start">
+                                <code class="text-muted">{{ member.line_id[:20] }}...</code>
+                            </td>
+                            
+                            <!-- Expiry Date -->
+                            <td>
+                                {{ member.expiry_date.strftime('%d/%m/%Y %H:%M') }}
+                            </td>
+                            
+                            <!-- ============================================ -->
+                            <!-- LAYER 6: STATUS LOGIC (3 STATES) -->
+                            <!-- ============================================ -->
+                            <td>
+                                {% if member.is_active and member.expiry_date > now %}
+                                    <!-- Active: เปิดอยู่ + ยังไม่หมดอายุ -->
+                                    <span class="badge badge-active">✅ Active</span>
+                                
+                                {% elif not member.is_active %}
+                                    <!-- Pending: ยังไม่อนุมัติ -->
+                                    <span class="badge badge-pending">⏳ รออนุมัติ</span>
+                                
+                                {% elif member.expiry_date <= now %}
+                                    <!-- Expired: หมดอายุแล้ว -->
+                                    <span class="badge badge-expired">⏰ หมดอายุ</span>
+                                {% endif %}
+                            </td>
+                            
+                            <!-- ============================================ -->
+                            <!-- LAYER 7: ACTION BUTTONS -->
+                            <!-- ============================================ -->
+                            <td>
+                                <!-- อนุมัติ 30 วัน -->
+                                <a href="{{ url_for('approve_member', member_id=member.id) }}" 
+                                   class="btn btn-success btn-sm me-1
+                                   {% if member.is_active and member.expiry_date > now %}disabled{% endif %}">
+                                    ✅ อนุมัติ 30 วัน
+                                </a>
+                                
+                                <!-- ปิดวาล์ว -->
+                                <a href="#" 
+                                   class="btn btn-outline-danger btn-sm" 
+                                   onclick="return confirm('ยืนยันการปิดวาล์ว {{ member.display_name }}?')">
+                                    🚫 ปิดวาล์ว
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    
+                    <!-- Empty State -->
                     {% else %}
-                    <tr>
-                        <td colspan="5" class="text-center p-5 text-muted">ยังไม่มีข้อมูลสมาชิกที่ส่งสลิปเข้ามา</td>
-                    </tr>
-                    {% endfor %}
+                        <tr>
+                            <td colspan="6" class="text-center p-5 text-muted">
+                                📭 ยังไม่มีข้อมูลสมาชิกที่ส่งสลิปเข้ามา
+                            </td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>
 
-        </div>
+    </div>
 
+    <!-- ============================================ -->
+    <!-- LAYER 8: SCRIPTS (if needed) -->
+    <!-- ============================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
