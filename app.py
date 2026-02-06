@@ -305,25 +305,34 @@ def home():
 
 @app.route('/admin/dashboard')
 def admin_dashboard():
-    members = Member.query.order_by(Member.created_at.desc()).all()
-    total = len(members)
-    
-    # นับแยกตามสถานะ
-    active = 0
-    pending = 0
-    expired = 0
+    # ดึงสมาชิกทั้งหมด
+    all_members = Member.query.all()
     now = datetime.now()
     
-    for m in members:
+    # แยกตามสถานะ
+    active_members = []
+    pending_members = []
+    expired_members = []
+    
+    for m in all_members:
         if m.is_active and m.expiry_date > now:
-            active += 1
+            active_members.append(m)
         elif not m.is_active:
-            pending += 1
+            pending_members.append(m)
         elif m.expiry_date <= now:
-            expired += 1
+            expired_members.append(m)
+    
+    # รวมเรียงลำดับ: Active → Pending → Expired
+    members = active_members + pending_members + expired_members
+    
+    # นับสถิติ
+    total = len(all_members)
+    active = len(active_members)
+    pending = len(pending_members)
+    expired = len(expired_members)
     
     return render_template('admin.html', 
-                         members=members, 
+                         members=members,
                          now=now,
                          total=total,
                          active=active,
@@ -382,5 +391,5 @@ def check_expiry():
 # LAYER 6: SERVER START
 # ============================================
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 5001))
     app.run(host='0.0.0.0', port=port)
