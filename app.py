@@ -77,7 +77,7 @@ def get_line_profile(user_id):
     return 'สมาชิกใหม่'
 
 def create_approval_flex(member_id, display_name, line_id):
-    """สร้าง Flex Message พร้อมปุ่มอนุมัติ/ปิดวาล์ว"""
+    """สร้าง Flex Message พร้อมปุ่มเปิดหน้าเว็บ"""
     return {
         "type": "bubble",
         "hero": {
@@ -123,7 +123,7 @@ def create_approval_flex(member_id, display_name, line_id):
                 },
                 {
                     "type": "text",
-                    "text": "กรุณาเลือกการดำเนินการ:",
+                    "text": "กดปุ่มด้านล่างเพื่อจัดการ",
                     "size": "sm",
                     "color": "#FFD700",
                     "margin": "lg",
@@ -139,25 +139,13 @@ def create_approval_flex(member_id, display_name, line_id):
                 {
                     "type": "button",
                     "action": {
-                        "type": "postback",
-                        "label": "✅ อนุมัติ 30 วัน",
-                        "data": f"action=approve&member_id={member_id}"
+                        "type": "uri",
+                        "label": "🎛️ เปิดหน้าจัดการ",
+                        "uri": "https://web-production-f17e.up.railway.app/admin/dashboard"
                     },
                     "style": "primary",
                     "color": "#10B881",
                     "height": "sm"
-                },
-                {
-                    "type": "button",
-                    "action": {
-                        "type": "postback",
-                        "label": "🚫 ปิดวาล์ว",
-                        "data": f"action=reject&member_id={member_id}"
-                    },
-                    "style": "secondary",
-                    "color": "#EF4444",
-                    "height": "sm",
-                    "margin": "sm"
                 }
             ],
             "backgroundColor": "#0A1628",
