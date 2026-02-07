@@ -387,7 +387,7 @@ def check_expiry():
     db.session.commit()
     return "✅ Checked"
 
-@app.route('/admin/create-test-data')  # ✅ ไม่มี indent
+@app.route('/admin/create-test-data')
 def create_test_data():
     """สร้างสมาชิกทดสอบ"""
     Member.query.delete()
