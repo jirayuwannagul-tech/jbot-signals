@@ -14,7 +14,10 @@ LINE_CHANNEL_ACCESS_TOKEN = 'PWgMZOGpbkRwRvPSTKQI4MnNsD8NEY5HYwCJT/Ge5KegcYNIdhJ
 LINE_CHANNEL_SECRET = 'b113f6e5414f3bcc23acbea86c4cee71'
 ADMIN_LINE_ID = 'U8e5ae7c7887eca3cdf7831bf1ede1d3f'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///jbot_members.db'
+database_url = os.environ.get('DATABASE_URL', 'sqlite:///jbot_members.db')
+if database_url.startswith('postgres://'):
+    database_url = database_url.replace('postgres://', 'postgresql://', 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
