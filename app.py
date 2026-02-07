@@ -388,18 +388,18 @@ def check_expiry():
     return "✅ Checked"
 
     @app.route('/admin/create-test-data')
-def create_test_data():
-    """สร้างสมาชิกทดสอบ"""
-    Member.query.delete()
-    m1 = Member(line_id='U1', display_name='Active 1', is_active=True, expiry_date=datetime.now()+timedelta(days=15))
-    m2 = Member(line_id='U2', display_name='Active 2', is_active=True, expiry_date=datetime.now()+timedelta(days=20))
-    m3 = Member(line_id='U3', display_name='Pending 1', is_active=False, expiry_date=datetime.now()+timedelta(days=30))
-    m4 = Member(line_id='U4', display_name='Pending 2', is_active=False, expiry_date=datetime.now()+timedelta(days=30))
-    m5 = Member(line_id='U5', display_name='Expired 1', is_active=True, expiry_date=datetime.now()-timedelta(days=5))
-    m6 = Member(line_id='U6', display_name='Expired 2', is_active=True, expiry_date=datetime.now()-timedelta(days=10))
-    db.session.add_all([m1, m2, m3, m4, m5, m6])
-    db.session.commit()
-    return redirect(url_for('admin_dashboard'))
+    def create_test_data():
+        """สร้างสมาชิกทดสอบ"""
+        Member.query.delete()
+        m1 = Member(line_id='U1', display_name='Active 1', is_active=True, expiry_date=datetime.now()+timedelta(days=15))
+        m2 = Member(line_id='U2', display_name='Active 2', is_active=True, expiry_date=datetime.now()+timedelta(days=20))
+        m3 = Member(line_id='U3', display_name='Pending 1', is_active=False, expiry_date=datetime.now()+timedelta(days=30))
+        m4 = Member(line_id='U4', display_name='Pending 2', is_active=False, expiry_date=datetime.now()+timedelta(days=30))
+        m5 = Member(line_id='U5', display_name='Expired 1', is_active=True, expiry_date=datetime.now()-timedelta(days=5))
+        m6 = Member(line_id='U6', display_name='Expired 2', is_active=True, expiry_date=datetime.now()-timedelta(days=10))
+        db.session.add_all([m1, m2, m3, m4, m5, m6])
+        db.session.commit()
+        return redirect(url_for('admin_dashboard'))
 
 # ============================================
 # LAYER 6: SERVER START
